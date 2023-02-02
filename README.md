@@ -3,7 +3,8 @@
 ## Reference
 
 Distance metric:
-- Normalized Euclidean Distance for points $1, 2$ of column $i$: $D = \sqrt{ \frac{(i_1 - i_2)^2}{\sigma_i} }$
+- Normalized Euclidean Distance between data points $x, y$: $D = \sqrt{ \sum{ \frac{(x_i - y_i)^2}{\sigma_i} } }$
+    - $i$ = column
 
 Column 0: "Avg. Area Income"
 - Min: 17796.6311895434
@@ -55,18 +56,19 @@ Dependency installation (if virtual environment is used):
 - `pip install numpy scipy matplotlib scikit-learn pandas`
 
 Jake:
-- Create initial distance metric (Thursday night)
-- Create confusion matrix (1.C)
-- 2.D and 2.E
-- 4
-- Do more exploration in the final task, such as trying different numbers of dimensions after PCA.
+
+- [ ] Create initial distance metric (Thursday night)
+- [ ] Create confusion matrix (1.C)
+- [ ] 2.D and 2.E
+- [ ] 4
+- [ ] Do more exploration in the final task, such as trying different numbers of dimensions after PCA.
 
 Yihan:
-- 1.C, 1.D
-- 2.A-C
-- 3
-- Try out more clustering methods.
-- Implement additional cluster quality metrics.
+- [ ] 1.C, 1.D
+- [ ] 2.A-C
+- [ ] 3
+- [ ] Try out more clustering methods.
+- [ ] Implement additional cluster quality metrics.
 
 Files:
 1) KNN
