@@ -3,7 +3,7 @@
 ## Reference
 
 Distance metric:
-- Normalized Euclidean Distance for column $i$: $D = \sqrt{ \sum{ \frac{(i_1 - i_2)^2}{\sigma_i} } }$
+- Normalized Euclidean Distance for points $1, 2$ of column $i$: $D = \sqrt{ \frac{(i_1 - i_2)^2}{\sigma_i} }$
 
 - Column 0: "Avg. Area Income"
     - Min: 17796.6311895434
