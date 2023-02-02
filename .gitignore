@@ -1,0 +1,12 @@
+# Python virtual env files
+.venv/
+.python-version
+
+# Other python stuff
+__pycache__/
+
+# vscode config files
+.vscode/
+
+# Obsidian config files
+.obsidian/
