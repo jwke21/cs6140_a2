@@ -49,19 +49,34 @@ def non_normalized_dist(first: pd.Series, second: pd.Series) -> float:
         dist += (first_vals[i] - second_vals[i]) ** 2
     return math.sqrt( dist )
 
-def normalized_dist(first: pd.Series, second: pd.Series, std: pd.Series) -> float:
+def normalized_dist(first: pd.Series, second: pd.Series, std: List[float]) -> float:
     dist = 0
     # Convert the series' to lists for easy iteration
     first_vals = first.to_list()
     second_vals = second.to_list()
-    std_vals = std.to_list()
     for i in range(len(first_vals)):
         dist += (first_vals[i] - second_vals[i]) ** 2
-        dist /= std_vals[i]  # Divide by the std for that col to whiten
+        dist /= std[i]  # Divide by the std for that col to whiten
     return math.sqrt( dist )
 
-def distance_between_data_points(from_points: pd.DataFrame, to_points: pd.DataFrame, std: pd.Series | None) -> pd.DataFrame:
-    pass
+def distance_between_data_points(from_points: pd.DataFrame, to_points: pd.DataFrame,\
+                                    std: List[float] | None) -> pd.DataFrame:
+    # ExN distance matrix
+    ret = pd.DataFrame()
+    for i in range(from_points.shape[0]):
+        from_data_point = from_points.iloc[i]
+        col = []
+        # Get the distance from the data point to each exemplar data point
+        for j in range(to_points.shape[0]):
+            to_data_point = to_points.iloc[j]
+            dist = None
+            if not std:
+                dist = non_normalized_dist(from_data_point, to_data_point)
+            else:
+                dist = normalized_dist(from_data_point, to_data_point, std)
+            col.append(dist)
+        ret[i] = pd.Series(col)
+    return ret
 
 def main():
     df = pd.read_csv("USA_Housing3.csv")
