@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -5,9 +7,9 @@ import scipy.stats as stats
 from typing import List
 import math
 
+
 class Column:
-    def __init__(self, name: str, min: float, max: float, mean: float, \
-            median: float, variance: float, std: float, values: List) -> None:
+    def __init__(self, name: str, min: float, max: float, mean: float, median: float, variance: float, std: float, values: List) -> None:
         self.name = name
         self.min = min
         self.max = max
@@ -16,16 +18,17 @@ class Column:
         self.variance = variance
         self.std = std
         self.values = values
-    
+
     def __str__(self) -> str:
-        ret = "Column: {}\n".format(self.name) +\
-        "Min: {}\n".format(self.min) +\
-        "Max: {}\n".format(self.max) +\
-        "Mean: {}\n".format(self.mean) +\
-        "Median: {}\n".format(self.median) +\
-        "Variance: {}\n".format(self.variance) +\
-        "Standard Deviation: {}\n".format(self.std)
+        ret = "Column: {}\n".format(self.name) + \
+              "Min: {}\n".format(self.min) + \
+              "Max: {}\n".format(self.max) + \
+              "Mean: {}\n".format(self.mean) + \
+              "Median: {}\n".format(self.median) + \
+              "Variance: {}\n".format(self.variance) + \
+              "Standard Deviation: {}\n".format(self.std)
         return ret
+
 
 def build_column_from_series(series: pd.Series) -> Column:
     return Column(
@@ -47,7 +50,8 @@ def non_normalized_dist(first: pd.Series, second: pd.Series) -> float:
     second_vals = second.to_list()
     for i in range(len(first_vals)):
         dist += (first_vals[i] - second_vals[i]) ** 2
-    return math.sqrt( dist )
+    return math.sqrt(dist)
+
 
 def normalized_dist(first: pd.Series, second: pd.Series, std: List[float]) -> float:
     dist = 0
@@ -57,10 +61,11 @@ def normalized_dist(first: pd.Series, second: pd.Series, std: List[float]) -> fl
     for i in range(len(first_vals)):
         dist += (first_vals[i] - second_vals[i]) ** 2
         dist /= std[i]  # Divide by the std for that col to whiten
-    return math.sqrt( dist )
+    return math.sqrt(dist)
 
-def distance_between_data_points(from_points: pd.DataFrame, to_points: pd.DataFrame,\
-                                    std: List[float] | None) -> pd.DataFrame:
+
+def distance_between_data_points(from_points: pd.DataFrame, to_points: pd.DataFrame, \
+                                 std: List[float] | None) -> pd.DataFrame:
     # ExN distance matrix
     ret = pd.DataFrame()
     for i in range(from_points.shape[0]):
@@ -99,10 +104,11 @@ def dist_between_data_points(from_point: pd.Series, to_points: pd.DataFrame, std
         )
     return ret
 
+
 def main():
-    df = pd.read_csv("USA_Housing3.csv")
+    df = pd.read_csv("../datasets/USA_Housing3.csv")
     columns = []
-    
+
     for i in range(len(df.columns.values)):
         col_name = df.columns.values[i]
         col = build_column_from_series(df[col_name])
@@ -112,6 +118,7 @@ def main():
     # Histogram
     # df["Price"].plot(kind="hist", xlabel="Price (Million)")
     # plt.show()
+
 
 if __name__ == "__main__":
     main()
