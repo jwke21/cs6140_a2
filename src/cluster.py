@@ -1,7 +1,8 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.cluster import KMeans, MeanShift
+from sklearn.cluster import KMeans, MeanShift, AgglomerativeClustering
+from scipy.cluster.hierarchy import dendrogram, linkage
 import scipy.stats as stats
 from typing import List
 import math
@@ -12,6 +13,7 @@ def plot_cluster(data):
     plt.scatter(data.iloc[:, 0], data.iloc[:, 1])
     plt.show()
 
+
 def plot_cluster_with_label(label, data):
     # Getting unique labels
     u_labels = np.unique(label)
@@ -21,17 +23,47 @@ def plot_cluster_with_label(label, data):
     plt.legend()
     plt.show()
 
-# function to apply k-means clustering algorithm on a dataset
-def k_means(data):
-    kmeans = KMeans(n_clusters=6, n_init="auto")
-    label = kmeans.fit_predict(data)
-    print(label)
-    plot_cluster_with_label(label, data)
 
+def calculate_representation_error(kmeans_model, data):
+    # get the squared distances
+    distances = kmeans_model.transform(data) ** 2
+    # find the distance to the closest cluster mean
+    distances = distances.min(axis=1)
+    # get the sum-squared error of those distances
+    representation_error = 0
+    for i in range(0, len(distances)):
+        representation_error += distances[i]
+    return representation_error
+
+
+def calculate_cluster_quality_metrics(k, n, representation_error):
+    cluster_quality_metric = representation_error + (k / 2) * math.log2(n)
+    return cluster_quality_metric
+
+
+    # function to apply k-means clustering algorithm on a dataset
+def k_means(data, k):
+    kmeans = KMeans(n_clusters=k, n_init="auto")
+    label = kmeans.fit_predict(data)
+    # plot_cluster_with_label(label, data)
+    representation_error = calculate_representation_error(kmeans, data)
+    return representation_error
+
+
+# function to apply mean-shift clustering algorithm on a dataset
 def mean_shift(data):
     meanshift = MeanShift(bandwidth=2)
     label = meanshift.fit_predict(data)
-    print(label)
+    plot_cluster_with_label(label, data)
+
+
+# function to apply hierarchical clustering algorithm on a dataset
+def hierarchical_clustering(data):
+    linkage_data = linkage(data, method='ward', metric='euclidean')
+    dendrogram(linkage_data)
+    plt.show()
+    hierarchical_cluster = AgglomerativeClustering(n_clusters=6, affinity='euclidean', linkage='ward')
+    label = hierarchical_cluster.fit_predict(data)
     plot_cluster_with_label(label, data)
 
 
@@ -42,11 +74,35 @@ def main():
     # plot the datasets
     # plot_cluster(df_1)
     # plot_cluster(df_2)
+
     # apply k-means on the datasets
-    # k_means(df_1)
-    # k_means(df_2)
+    # k_means(df_1, 6)
+    # k_means(df_2, 6)
+
+    # apply mean shift on the datasets
     # mean_shift(df_1)
-    mean_shift(df_2)
+    # mean_shift(df_2)
+
+    # apply hierarchical clustering on the datasets
+    # hierarchical_clustering(df_1)
+    # hierarchical_clustering(df_2)
+
+    # try k from 2 to 10 on dataset A
+    representation_errors = []
+    k_values = []
+    cluster_quality_metrics = []
+    n = len(df_1.iloc[:, 0])
+    for i in range(2, 11):
+        representation_error = k_means(df_1, i)
+        representation_errors.append(representation_error)
+        cluster_quality_metric = calculate_cluster_quality_metrics(i, n, representation_error)
+        cluster_quality_metrics.append(cluster_quality_metric)
+        k_values.append(i)
+    # plt.plot(k_values, representation_errors)
+    # plt.show()
+    plt.plot(k_values, cluster_quality_metrics)
+    plt.show()
+
 
 
 if __name__ == "__main__":
