@@ -78,6 +78,27 @@ def distance_between_data_points(from_points: pd.DataFrame, to_points: pd.DataFr
         ret[i] = pd.Series(col)
     return ret
 
+def dist_between_data_points(from_point: pd.Series, to_points: pd.DataFrame, std: List[float] | None) -> pd.Series:
+    ret = None
+    if not std:
+        # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.apply.html
+        ret = to_points.apply(
+            function=non_normalized_dist, # "Function to apply to each column or row"
+            axis=1, # "Apply function to each row"
+            raw=False, # "Passes each row or column as a Series to the function"
+            result_type="reduce", # "Returns a Series if possible"
+            args=(from_point, this),
+        )
+    else:
+        ret = to_points.apply(
+            function=non_normalized_dist, # "Function to apply to each column or row"
+            axis=1, # "Apply function to each row"
+            raw=False, # "Passes each row or column as a Series to the function"
+            result_type="reduce", # "Returns a Series if possible"
+            args=(from_point, this, std),
+        )
+    return ret
+
 def main():
     df = pd.read_csv("USA_Housing3.csv")
     columns = []
