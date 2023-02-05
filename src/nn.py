@@ -65,21 +65,12 @@ def normalized_dist(first: pd.Series, second: pd.Series, std: List[float]) -> fl
 
 def dist_between_data_sets(from_points: pd.DataFrame, to_points: pd.DataFrame, std: List[float] | None) -> pd.DataFrame:
     # ExN distance matrix
-    ret = []
+    ret = pd.DataFrame()
+    cols = []
     for i in range(from_points.shape[0]):
         from_data_point = from_points.iloc[i]
-        col = []
-        # Get the distance from the data point to each exemplar data point
-        for j in range(to_points.shape[0]):
-            to_data_point = to_points.iloc[j]
-            dist = None
-            if not std:
-                dist = non_normalized_dist(from_data_point, to_data_point)
-            else:
-                dist = normalized_dist(from_data_point, to_data_point, std)
-            col.append(dist)
-        ret.append(col)
-    return pd.DataFrame(ret)
+        cols.append(dist_between_data_points(from_data_point, to_points, std))
+    return pd.concat(cols, axis=1)
 
 def dist_between_data_points(from_point: pd.Series, to_points: pd.DataFrame, std: List[float] | None) -> pd.Series:
     # Ex1 distance matrix
@@ -155,8 +146,8 @@ def main():
     std = [col.std for col in columns]
     predictions, error_terms = nearest_neighbor(training_df, test_df, std)
 
-    # print(test_df["Price"])
-    # print(predictions)
+    print(test_df["Price"])
+    print(predictions)
 
     # Histogram
     # df["Price"].plot(kind="hist", xlabel="Price (Million)")
