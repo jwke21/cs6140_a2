@@ -8,7 +8,8 @@ from utils import partition_training_and_test_data
 
 
 class Column:
-    def __init__(self, name: str, min: float, max: float, mean: float, median: float, variance: float, std: float, values: List) -> None:
+    def __init__(self, name: str, min: float, max: float, mean: float, median: float, variance: float, std: float,
+                 values: List) -> None:
         self.name = name
         self.min = min
         self.max = max
@@ -72,6 +73,7 @@ def dist_between_data_sets(from_points: pd.DataFrame, to_points: pd.DataFrame, s
         cols.append(dist_between_data_points(from_data_point, to_points, std))
     return pd.concat(cols, axis=1)
 
+
 def dist_between_data_points(from_point: pd.Series, to_points: pd.DataFrame, std: List[float] | None) -> pd.Series:
     # Ex1 distance matrix
     ret = []
@@ -86,7 +88,9 @@ def dist_between_data_points(from_point: pd.Series, to_points: pd.DataFrame, std
         ret.append(dist)
     return pd.Series(ret)
 
-def nearest_neighbor(training_set: pd.DataFrame, test_set: pd.DataFrame, std: List[float]) -> Tuple[List[str], List[float]]:
+
+def nearest_neighbor(training_set: pd.DataFrame, test_set: pd.DataFrame, std: List[float]) -> Tuple[
+    List[str], List[float]]:
     # Returned arrays
     predicted_classes = []
     error_terms = []
@@ -96,7 +100,7 @@ def nearest_neighbor(training_set: pd.DataFrame, test_set: pd.DataFrame, std: Li
     training_features = training_set.iloc[:, :-1]
     dist_matrix = dist_between_data_sets(test_features, training_features, std[:-1])
 
-    # Classify price based on distance to nearest neigbor
+    # Classify price based on distance to nearest neighbor
     for i in range(test_set.shape[0]):
         # Get distances
         distances_to_points = dist_matrix[i]
@@ -110,8 +114,9 @@ def nearest_neighbor(training_set: pd.DataFrame, test_set: pd.DataFrame, std: Li
         predicted_classes.append(nn_class)
         # Add distance to error terms array
         error_terms.append(closest_dist)
-        
+
     return (predicted_classes, error_terms)
+
 
 def main():
     df = pd.read_csv("datasets/USA_Housing3.csv")
