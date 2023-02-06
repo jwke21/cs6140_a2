@@ -24,7 +24,7 @@ def plot_cluster_with_label(label, data):
     plt.show()
 
 
-def calculate_representation_error(kmeans_model, data):
+def calculate_representation_error(kmeans_model, data, k):
     # get the squared distances
     distances = kmeans_model.transform(data) ** 2
     # find the distance to the closest cluster mean
@@ -33,20 +33,24 @@ def calculate_representation_error(kmeans_model, data):
     representation_error = 0
     for i in range(0, len(distances)):
         representation_error += distances[i]
+    # verify if the representation error is calculated correctly
+    if round(kmeans_model.inertia_, 3) != round(representation_error, 3):
+        print(f"Representation error is not calculated correctly using k={k}")
     return representation_error
 
 
-def calculate_cluster_quality_metrics(k, n, representation_error):
-    cluster_quality_metric = representation_error + (k / 2) * math.log2(n)
-    return cluster_quality_metric
-
+def calculate_minimum_description_length(k, n, representation_error):
+    minimum_description_length = representation_error + (k / 2) * math.log2(n)
+    return minimum_description_length
 
     # function to apply k-means clustering algorithm on a dataset
+
+
 def k_means(data, k):
     kmeans = KMeans(n_clusters=k, n_init="auto")
     label = kmeans.fit_predict(data)
     # plot_cluster_with_label(label, data)
-    representation_error = calculate_representation_error(kmeans, data)
+    representation_error = calculate_representation_error(kmeans, data, k)
     return representation_error
 
 
@@ -90,19 +94,18 @@ def main():
     # try k from 2 to 10 on dataset A
     representation_errors = []
     k_values = []
-    cluster_quality_metrics = []
+    minimum_description_lengths = []
     n = len(df_1.iloc[:, 0])
     for i in range(2, 11):
         representation_error = k_means(df_1, i)
         representation_errors.append(representation_error)
-        cluster_quality_metric = calculate_cluster_quality_metrics(i, n, representation_error)
-        cluster_quality_metrics.append(cluster_quality_metric)
+        minimum_description_length = calculate_minimum_description_length(i, n, representation_error)
+        minimum_description_lengths.append(minimum_description_length)
         k_values.append(i)
-    # plt.plot(k_values, representation_errors)
-    # plt.show()
-    plt.plot(k_values, cluster_quality_metrics)
+    plt.plot(k_values, representation_errors)
     plt.show()
-
+    plt.plot(k_values, minimum_description_lengths)
+    plt.show()
 
 
 if __name__ == "__main__":
