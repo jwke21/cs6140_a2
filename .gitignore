@@ -10,3 +10,6 @@ __pycache__/
 
 # Obsidian config files
 .obsidian/
+
+# MacOS dir config stuff
+.DS_Store
