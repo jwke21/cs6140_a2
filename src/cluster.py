@@ -45,11 +45,31 @@ def calculate_minimum_description_length(k: int, n: int, representation_error: f
     return minimum_description_length
 
 
+def prepare_for_diff(k: int, p: int, data: pd.DataFrame) -> float:
+    kmeans = KMeans(n_clusters=k, n_init="auto")
+    kmeans.fit_predict(data)
+    representation_error = calculate_representation_error(kmeans, data, k)
+    return (k ** (2 / p)) * representation_error
+
+
+def calculate_diff(k: int, p: int, data: pd.DataFrame) -> float:
+    diff = prepare_for_diff(k - 1, p, data) - prepare_for_diff(k, p, data)
+    return diff
+
+
+def calculate_KL(k: int, data: pd.DataFrame) -> float:
+    p = len(data.axes[1])
+    diff_k = calculate_diff(k, p, data)
+    diff_k_plus = calculate_diff(k + 1, p, data)
+    return abs(diff_k / diff_k_plus)
+
+
 # Function to generate clusters with k means algorithm on a dataset with input k
-def k_means(data: pd.DataFrame, k: int) -> float:
+def k_means(data: pd.DataFrame, k: int, if_plot: bool = True) -> float:
     kmeans = KMeans(n_clusters=k, n_init="auto")
     label = kmeans.fit_predict(data)
-    plot_cluster_with_label(label, data)
+    if if_plot:
+        plot_cluster_with_label(label, data)
     representation_error = calculate_representation_error(kmeans, data, k)
     return representation_error
 
@@ -71,41 +91,56 @@ def hierarchical_clustering(data: pd.DataFrame) -> None:
     plot_cluster_with_label(label, data)
 
 
-def main():
-    # Get the datasets
-    df_1 = pd.read_csv("../datasets/clusterDataA-1.csv")
-    df_2 = pd.read_csv("../datasets/clusterDataB-1.csv")
-    # Plot the datasets
-    plot_cluster(df_1)
-    plot_cluster(df_2)
-
-    # Apply k-means on the datasets
-    k_means(df_1, 6)
-    k_means(df_2, 6)
-
-    # Apply mean shift on the datasets
-    mean_shift(df_1)
-    mean_shift(df_2)
-
-    # Apply hierarchical clustering on the datasets
-    hierarchical_clustering(df_1)
-    hierarchical_clustering(df_2)
-
-    # Try k from 2 to 10 on dataset A
+# Try k means clustering with a range of K and plot the quality metrics
+def k_means_with_range_and_plot(min: int, max: int, data: pd.DataFrame, if_plot: bool = True) -> None:
     representation_errors = []
     k_values = []
     minimum_description_lengths = []
-    n = len(df_1.iloc[:, 0])
-    for i in range(2, 11):
-        representation_error = k_means(df_1, i)
+    KLs = []
+    n = len(data.iloc[:, 0])
+    for i in range(min, max):
+        representation_error = k_means(data, i, if_plot)
         representation_errors.append(representation_error)
         minimum_description_length = calculate_minimum_description_length(i, n, representation_error)
         minimum_description_lengths.append(minimum_description_length)
+        KL = calculate_KL(i, data)
+        KLs.append(KL)
         k_values.append(i)
     plt.plot(k_values, representation_errors)
     plt.show()
     plt.plot(k_values, minimum_description_lengths)
     plt.show()
+    plt.plot(k_values, KLs)
+    plt.show()
+
+
+def main():
+    # Get the datasets
+    df_1 = pd.read_csv("../datasets/clusterDataA-1.csv")
+    # df_2 = pd.read_csv("../datasets/clusterDataB-1.csv")
+    # Plot the datasets
+    # plot_cluster(df_1)
+    # plot_cluster(df_2)
+
+    # Apply k-means on the datasets
+    # k_means(df_1, 6)
+    # k_means(df_2, 6)
+
+    # Apply mean shift on the datasets
+    # mean_shift(df_1)
+    # mean_shift(df_2)
+
+    # Apply hierarchical clustering on the datasets
+    # hierarchical_clustering(df_1)
+    # hierarchical_clustering(df_2)
+
+    # Try k from 2 to 10 on dataset A
+    # k_means_with_range_and_plot(2, 11, df_1)
+
+    # Apply K-Means Clustering to wine dataset
+    wine_data = pd.read_csv("../datasets/wine-clustering.csv")
+    # Try k from 2 to 30 on dataset A
+    k_means_with_range_and_plot(2, 30, wine_data, False)
 
 
 if __name__ == "__main__":

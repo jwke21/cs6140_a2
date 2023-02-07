@@ -119,7 +119,7 @@ def nearest_neighbor(training_set: pd.DataFrame, test_set: pd.DataFrame, std: Li
 
 
 def main():
-    df = pd.read_csv("datasets/USA_Housing3.csv")
+    df = pd.read_csv("../datasets/USA_Housing3.csv")
     columns = []
 
     for i in range(len(df.columns.values)):
@@ -153,6 +153,7 @@ def main():
 
     print(test_df["Price"])
     print(predictions)
+    print('hi')
 
     # Histogram
     # df["Price"].plot(kind="hist", xlabel="Price (Million)")
