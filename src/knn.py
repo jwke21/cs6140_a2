@@ -14,6 +14,21 @@ ACTIVITY_LABELS = [
     6, # LAYING
 ]
 
+def load_uci_data() -> Tuple[pd.DataFrame, pd.Series]:
+    # Load data from train and test sets
+    X_names = np.loadtxt("datasets/UCI_HAR_Dataset/features.txt", usecols=1, dtype="str")
+    y_name = "activity"
+    test_X = np.loadtxt("datasets/UCI_HAR_Dataset/test/X_test.txt")
+    test_y = np.loadtxt("datasets/UCI_HAR_Dataset/test/y_test.txt")
+    train_X = np.loadtxt("datasets/UCI_HAR_Dataset/train/X_train.txt")
+    train_y = np.loadtxt("datasets/UCI_HAR_Dataset/train/y_train.txt")
+    # Re-form raw data set from loaded sets
+    X_raw = np.concatenate((test_X, train_X), axis=0)
+    y_raw = np.concatenate((test_y, train_y), axis=0)
+    X_raw = pd.DataFrame(X_raw, columns=X_names)
+    y_raw = pd.Series(y_raw, name=y_name)
+    return X_raw, y_raw
+
 # Finds the number of neighbors that produces the best score for the given training and test sets
 def find_optimal_num_neighbors(X_train: pd.DataFrame, X_test: pd.DataFrame, y_train: pd.Series, y_test: pd.Series, \
                                 range_start=2, range_end=11, print_all_scores=False) -> Tuple[int, float]:
@@ -34,20 +49,9 @@ def find_optimal_num_neighbors(X_train: pd.DataFrame, X_test: pd.DataFrame, y_tr
     return best_n_neighbors, max_score
 
 def main():
-    X_cols = np.loadtxt("datasets/UCI_HAR_Dataset/features.txt", usecols=1, dtype="str")
-    y_col = "activity"
+    X_raw, y_raw = load_uci_data()
 
-    # Reform raw data set before train-test split
-    test_X = np.loadtxt("datasets/UCI_HAR_Dataset/test/X_test.txt")
-    test_y = np.loadtxt("datasets/UCI_HAR_Dataset/test/y_test.txt")
-    train_X = np.loadtxt("datasets/UCI_HAR_Dataset/train/X_train.txt")
-    train_y = np.loadtxt("datasets/UCI_HAR_Dataset/train/y_train.txt")
-    X_raw = np.concatenate((test_X, train_X), axis=0)
-    y_raw = np.concatenate((test_y, train_y), axis=0)
-    X_raw = pd.DataFrame(X_raw, columns=X_cols)
-    y_raw = pd.Series(y_raw, name=y_col)
-
-    # Re-split data into 75% training data and 25% test data
+    # Split data into 75% training data and 25% test data
     X_train, X_test, y_train, y_test = train_test_split(X_raw, y_raw, test_size=0.25)
 
     # Classify data set using KNN (Features are already whitened)
