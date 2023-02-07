@@ -46,7 +46,7 @@ def find_optimal_num_neighbors(X_train: pd.DataFrame, X_test: pd.DataFrame, y_tr
             max_score = score
             best_n_neighbors = i
     print(f"{best_n_neighbors} neighbors produced the highest score of {max_score}")
-    return best_n_neighbors, max_score
+    return best_n_neighbors, max_score, KNeighborsClassifier(n_neighbors=best_n_neighbors)
 
 def main():
     X_raw, y_raw = load_uci_data()
