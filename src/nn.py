@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import pandas as pd
+import numpy as np
 import math
 from typing import *
 from utils import partition_training_and_test_data
@@ -48,20 +49,15 @@ def build_column_from_series(series: pd.Series) -> Column:
 def non_normalized_dist(first: pd.Series, second: pd.Series) -> float:
     dist = 0
     # Convert the series' to lists for easy iteration
-    first_vals = first.to_list()
-    second_vals = second.to_list()
-    for i in range(len(first_vals)):
-        dist += (first_vals[i] - second_vals[i]) ** 2
+    for i, first_val in enumerate(first):
+        dist += (first_val - second.iloc[i]) ** 2
     return math.sqrt(dist)
 
 
 def normalized_dist(first: pd.Series, second: pd.Series, std: List[float]) -> float:
     dist = 0
-    # Convert the series' to lists for easy iteration
-    first_vals = first.to_list()
-    second_vals = second.to_list()
-    for i in range(len(first_vals)):
-        dist += (first_vals[i] - second_vals[i]) ** 2
+    for i, first_val in enumerate(first):
+        dist += (first_val - second.iloc[i]) ** 2
         dist /= std[i]  # Divide by the std for that col to whiten
     return math.sqrt(dist)
 
@@ -70,8 +66,7 @@ def dist_between_data_sets(from_points: pd.DataFrame, to_points: pd.DataFrame, s
     # ExN distance matrix
     ret = pd.DataFrame()
     cols = []
-    for i in range(from_points.shape[0]):
-        from_data_point = from_points.iloc[i]
+    for i, from_data_point in from_points.iterrows():
         cols.append(dist_between_data_points(from_data_point, to_points, std))
     return pd.concat(cols, axis=1)
 
@@ -80,8 +75,7 @@ def dist_between_data_points(from_point: pd.Series, to_points: pd.DataFrame, std
     # Ex1 distance matrix
     ret = []
     # Get the distance from the data point to each exemplar data point
-    for i in range(to_points.shape[0]):
-        to_data_point = to_points.iloc[i]
+    for i, to_data_point in to_points.iterrows():
         dist = None
         if not std:
             dist = non_normalized_dist(from_point, to_data_point)
@@ -91,8 +85,7 @@ def dist_between_data_points(from_point: pd.Series, to_points: pd.DataFrame, std
     return pd.Series(ret)
 
 
-def nearest_neighbor(training_set: pd.DataFrame, test_set: pd.DataFrame, std: List[float] | None = None) -> Tuple[
-    List[str], List[float]]:
+def nearest_neighbor(training_set: pd.DataFrame, test_set: pd.DataFrame, std: List[float] | None = None) -> Tuple[List[str], List[float]]:
     # Returned arrays
     predicted_classes = []
     error_terms = []
