@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import pandas as pd
-import numpy as np
 import math
 from typing import *
 from utils import partition_training_and_test_data
+from sklearn.metrics import confusion_matrix
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 class Column:
@@ -89,7 +91,7 @@ def dist_between_data_points(from_point: pd.Series, to_points: pd.DataFrame, std
     return pd.Series(ret)
 
 
-def nearest_neighbor(training_set: pd.DataFrame, test_set: pd.DataFrame, std: List[float]) -> Tuple[
+def nearest_neighbor(training_set: pd.DataFrame, test_set: pd.DataFrame, std: List[float] | None = None) -> Tuple[
     List[str], List[float]]:
     # Returned arrays
     predicted_classes = []
@@ -98,7 +100,10 @@ def nearest_neighbor(training_set: pd.DataFrame, test_set: pd.DataFrame, std: Li
     # Get the distance matrix
     test_features = test_set.iloc[:, :-1]  # Assumes dependent variable is the last column
     training_features = training_set.iloc[:, :-1]
-    dist_matrix = dist_between_data_sets(test_features, training_features, std[:-1])
+    if std:
+        dist_matrix = dist_between_data_sets(test_features, training_features, std[:-1])
+    else:
+        dist_matrix = dist_between_data_sets(test_features, training_features, None)
 
     # Classify price based on distance to nearest neighbor
     for i in range(test_set.shape[0]):
@@ -116,6 +121,27 @@ def nearest_neighbor(training_set: pd.DataFrame, test_set: pd.DataFrame, std: Li
         error_terms.append(closest_dist)
 
     return (predicted_classes, error_terms)
+
+
+def calculate_precision(actual_df: pd.DataFrame, predicted_df: List[str]) -> float:
+    match = 0
+    n = actual_df.shape[0]
+    for i in range(0, n):
+        if float(actual_df.iloc[i]) == float(predicted_df[i]):
+            match += 1
+    return match / n
+
+
+def compute_confusion_matrix(actual_y: pd.DataFrame, predicted_y: pd.DataFrame) -> Any:
+    conf_matrix = confusion_matrix(actual_y, predicted_y)
+    return conf_matrix
+
+
+def plot_conf_matrix(conf_matrix: Any) -> None:
+    sns.heatmap(conf_matrix, annot=True, cmap='Blues', fmt='d')
+    plt.xlabel('Predicted')
+    plt.ylabel('True')
+    plt.show()
 
 
 def main():
@@ -147,13 +173,30 @@ def main():
     # Split into test and training set
     test_df, training_df = partition_training_and_test_data(data=df, test_data_percentage=25)
 
-    # Run Nearest Neighbor
-    std = [col.std for col in columns]
-    predictions, error_terms = nearest_neighbor(training_df, test_df, std)
+    # Run Nearest Neighbor with whitened data
+    # std = [col.std for col in columns]
+    # predictions, error_terms = nearest_neighbor(training_df, test_df, std)
+    #
+    # print(test_df["Price"])
+    # print(predictions)
+    # # Calculate precision
+    # precision = calculate_precision(test_df["Price"], predictions)
+    # print(f"precision using whitened data is: {precision}")
+    # # Calculate and plot confusion matrix
+    # conf_matrix = compute_confusion_matrix(test_df["Price"], predictions)
+    # plot_conf_matrix(conf_matrix)
+
+    # Run Nearest Neighbor without whitened data
+    predictions, error_terms = nearest_neighbor(training_df, test_df)
 
     print(test_df["Price"])
     print(predictions)
-    print('hi')
+    # Calculate precision$
+    precision = calculate_precision(test_df["Price"], predictions)
+    print(f"precision using un_whitened data is: {precision}")
+    # Calculate and plot confusion matrix
+    conf_matrix = compute_confusion_matrix(test_df["Price"], predictions)
+    plot_conf_matrix(conf_matrix)
 
     # Histogram
     # df["Price"].plot(kind="hist", xlabel="Price (Million)")
