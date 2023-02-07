@@ -1,11 +1,9 @@
 import pandas as pd
 import numpy as np
 
-
 # computes the principal components of the given data
 # returns the means, standard deviations, eigenvalues, eigenvectors, and projected data
-def pca(data: pd.DataFrame, normalize=True, print_results=False) -> \
-            tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, pd.DataFrame]:
+def pca(data: pd.DataFrame, normalize=False, print_results=False) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, pd.DataFrame]:
     # assign to A the data as a numpy matrix
     A = data.to_numpy()
     # assign to m the mean values of the columns of A
@@ -45,6 +43,22 @@ def pca(data: pd.DataFrame, normalize=True, print_results=False) -> \
     # return the means, standard deviations, eigenvalues, eigenvectors, and projected dataD
     return m, std_deviations, eigenvalues, V, new_df
 
+def reduce_dimensions(proj_data: pd.DataFrame, eigenvalues: np.ndarray, explained_variance: float) -> pd.DataFrame:
+    N = eigenvalues.shape[0]
+    variance = 0.0
+    num_kept = 0
+    # Find the number of required eigenvectors to capture explained variance
+    for i, val in enumerate(eigenvalues):
+        if variance / N > explained_variance:
+            num_kept = i + 1
+            break
+        variance += val
+    # Perform the dimensionality reduction
+    X_reduced = proj_data.iloc[:, :num_kept]
+    print(f"Number of eigenvectors kept: {num_kept} out of {N}")
+    print(f"Explained variance: {explained_variance / N}")
+
+    return X_reduced
 
 def print_pca_results(means: np.ndarray, std_deviations: np.ndarray,
                         difference_matrix: np.ndarray, eigenvalues: np.ndarray,
