@@ -174,17 +174,17 @@ def main():
     test_df, training_df = partition_training_and_test_data(data=df, test_data_percentage=25)
 
     # Run Nearest Neighbor with whitened data
-    # std = [col.std for col in columns]
-    # predictions, error_terms = nearest_neighbor(training_df, test_df, std)
-    #
-    # print(test_df["Price"])
-    # print(predictions)
-    # # Calculate precision
-    # precision = calculate_precision(test_df["Price"], predictions)
-    # print(f"precision using whitened data is: {precision}")
-    # # Calculate and plot confusion matrix
-    # conf_matrix = compute_confusion_matrix(test_df["Price"], predictions)
-    # plot_conf_matrix(conf_matrix)
+    std = [col.std for col in columns]
+    predictions, error_terms = nearest_neighbor(training_df, test_df, std)
+
+    print(test_df["Price"])
+    print(predictions)
+    # Calculate precision
+    precision = calculate_precision(test_df["Price"], predictions)
+    print(f"precision using whitened data is: {precision}")
+    # Calculate and plot confusion matrix
+    conf_matrix = compute_confusion_matrix(test_df["Price"], predictions)
+    plot_conf_matrix(conf_matrix)
 
     # Run Nearest Neighbor without whitened data
     predictions, error_terms = nearest_neighbor(training_df, test_df)

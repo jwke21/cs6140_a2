@@ -117,25 +117,25 @@ def k_means_with_range_and_plot(min: int, max: int, data: pd.DataFrame, if_plot:
 def main():
     # Get the datasets
     df_1 = pd.read_csv("../datasets/clusterDataA-1.csv")
-    # df_2 = pd.read_csv("../datasets/clusterDataB-1.csv")
+    df_2 = pd.read_csv("../datasets/clusterDataB-1.csv")
     # Plot the datasets
-    # plot_cluster(df_1)
-    # plot_cluster(df_2)
+    plot_cluster(df_1)
+    plot_cluster(df_2)
 
     # Apply k-means on the datasets
-    # k_means(df_1, 6)
-    # k_means(df_2, 6)
+    k_means(df_1, 6)
+    k_means(df_2, 6)
 
     # Apply mean shift on the datasets
-    # mean_shift(df_1)
-    # mean_shift(df_2)
+    mean_shift(df_1)
+    mean_shift(df_2)
 
     # Apply hierarchical clustering on the datasets
-    # hierarchical_clustering(df_1)
-    # hierarchical_clustering(df_2)
+    hierarchical_clustering(df_1)
+    hierarchical_clustering(df_2)
 
     # Try k from 2 to 10 on dataset A
-    # k_means_with_range_and_plot(2, 11, df_1)
+    k_means_with_range_and_plot(2, 11, df_1)
 
     # Apply K-Means Clustering to wine dataset
     wine_data = pd.read_csv("../datasets/wine-clustering.csv")
