@@ -55,8 +55,7 @@ def main():
     X_train, X_test, y_train, y_test = train_test_split(X_raw, y_raw, test_size=0.25)
 
     # Classify data set using KNN (Features are already whitened)
-    n_neigh, score = find_optimal_num_neighbors(X_train, X_test, y_train, y_test)
-    knn = KNeighborsClassifier(n_neighbors=n_neigh)
+    n_neigh, score, knn = find_optimal_num_neighbors(X_train, X_test, y_train, y_test)
 
     # Execute PCA on data
     _, _, eigenvalues, _, proj_data = pca(X_raw, normalize=True)
@@ -67,8 +66,7 @@ def main():
     X_train, X_test, y_train, y_test = train_test_split(X_reduced, y_raw, test_size=0.25)
 
     # Train the new classifier on the reduced-dimension data
-    n_neigh, score = find_optimal_num_neighbors(X_train, X_test, y_train, y_test)
-    knn = KNeighborsClassifier(n_neighbors=n_neigh)
+    n_neigh, score, knn = find_optimal_num_neighbors(X_train, X_test, y_train, y_test)
 
 
 if __name__ == "__main__":
