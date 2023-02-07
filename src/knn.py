@@ -31,7 +31,7 @@ def load_uci_data() -> Tuple[pd.DataFrame, pd.Series]:
 
 # Finds the number of neighbors that produces the best score for the given training and test sets
 def find_optimal_num_neighbors(X_train: pd.DataFrame, X_test: pd.DataFrame, y_train: pd.Series, y_test: pd.Series, \
-                                range_start=2, range_end=11, print_all_scores=False) -> Tuple[int, float]:
+                                range_start=2, range_end=11, print_all_scores=False) -> Tuple[int, float, KNeighborsClassifier]:
     # Classify data set using KNN (Features are already whitened)
     max_score = 0.0
     best_n_neighbors = 0
