@@ -1,7 +1,7 @@
 """
 CS6140 Project 2
-Yihan Xu
 Jake Van Meter
+Yihan Xu
 """
 
 import pandas as pd
@@ -153,16 +153,21 @@ def main():
     k_means_with_range_and_plot(2, 30, wine_data, False)
 
     # Apply PCA to data sets
-    set_a_means, set_a_std, set_a_eigenvalues, set_a_eigenvectors, set_a_proj_data = pca(df_1.iloc[:, :-1], normalize=False, print_results=False)
-    set_b_means, set_b_std, set_b_eigenvalues, set_b_eigenvectors, set_b_proj_data = pca(df_2.iloc[:, :-1], normalize=False, print_results=False)
+    set_a_means, set_a_std, set_a_eigenvalues, set_a_eigenvectors, set_a_proj_data = pca(df_1.iloc[:, :-1],
+                                                                                         normalize=False,
+                                                                                         print_results=False)
+    set_b_means, set_b_std, set_b_eigenvalues, set_b_eigenvectors, set_b_proj_data = pca(df_2.iloc[:, :-1],
+                                                                                         normalize=False,
+                                                                                         print_results=False)
 
     # Plot set A with its eigenvectors
-    eig_1_X = set_a_means[0] # X value of arrow start
-    eig_1_Y = set_a_means[1] # Y value of arrow start
-    eig_1_U = set_a_eigenvectors[0][0] # X magnitude of arrow
-    eig_1_V = set_a_eigenvectors[1][0] # Y magnitude of arrow
+    eig_1_X = set_a_means[0]  # X value of arrow start
+    eig_1_Y = set_a_means[1]  # Y value of arrow start
+    eig_1_U = set_a_eigenvectors[0][0]  # X magnitude of arrow
+    eig_1_V = set_a_eigenvectors[1][0]  # Y magnitude of arrow
     plt.scatter(x=df_1.iloc[:, 0], y=df_1.iloc[:, 1], label="Data set A points")
-    plt.quiver(eig_1_X, eig_1_Y, eig_1_U, eig_1_V, angles="xy", scale_units="xy", scale=1, label="Data set A first eigenvector")
+    plt.quiver(eig_1_X, eig_1_Y, eig_1_U, eig_1_V, angles="xy", scale_units="xy", scale=1,
+               label="Data set A first eigenvector")
     plt.xlabel("X1")
     plt.ylabel("X2")
     plt.legend()
@@ -171,7 +176,8 @@ def main():
 
     plt.scatter(x=df_1.iloc[:, 0], y=df_1.iloc[:, 1], label="Data set A points")
     plt.scatter(x=set_a_proj_data.iloc[:, 0], y=set_a_proj_data.iloc[:, 1], c="r", label="Data set A projected data")
-    plt.quiver(eig_1_X, eig_1_Y, eig_1_U, eig_1_V, angles="xy", scale_units="xy", scale=1, label="Data set A first eigenvector")
+    plt.quiver(eig_1_X, eig_1_Y, eig_1_U, eig_1_V, angles="xy", scale_units="xy", scale=1,
+               label="Data set A first eigenvector")
     plt.legend()
     plt.draw()
     plt.show()
@@ -180,12 +186,13 @@ def main():
     print(f"Set A Eigenvectors:\n{set_a_eigenvectors}\n")
 
     # Plot set B with its eigenvectors
-    eig_2_X = set_b_means[0] # X value of arrow start
-    eig_2_Y = set_b_means[1] # Y value of arrow start
-    eig_2_U = set_b_eigenvectors[0][0] # X magnitude of arrow
-    eig_2_V = set_b_eigenvectors[1][0] # Y magnitude of arrow
+    eig_2_X = set_b_means[0]  # X value of arrow start
+    eig_2_Y = set_b_means[1]  # Y value of arrow start
+    eig_2_U = set_b_eigenvectors[0][0]  # X magnitude of arrow
+    eig_2_V = set_b_eigenvectors[1][0]  # Y magnitude of arrow
     plt.scatter(x=df_2.iloc[:, 0], y=df_2.iloc[:, 1], label="Data set B points")
-    plt.quiver(eig_2_X, eig_2_Y, eig_2_U, eig_2_V, angles="xy", scale_units="xy", scale=1, label="Data set B first eigenvector")
+    plt.quiver(eig_2_X, eig_2_Y, eig_2_U, eig_2_V, angles="xy", scale_units="xy", scale=1,
+               label="Data set B first eigenvector")
     plt.xlabel("X1")
     plt.ylabel("X2")
     plt.legend()
@@ -194,11 +201,11 @@ def main():
 
     plt.scatter(x=df_2.iloc[:, 0], y=df_2.iloc[:, 1], label="Data set B points")
     plt.scatter(x=set_b_proj_data.iloc[:, 0], y=set_b_proj_data.iloc[:, 1], c="r", label="Data set B projected data")
-    plt.quiver(eig_2_X, eig_2_Y, eig_2_U, eig_2_V, angles="xy", scale_units="xy", scale=1, label="Data set B first eigenvector")
+    plt.quiver(eig_2_X, eig_2_Y, eig_2_U, eig_2_V, angles="xy", scale_units="xy", scale=1,
+               label="Data set B first eigenvector")
     plt.legend()
     plt.draw()
     plt.show()
-    
 
     print(f"Set B Eigenvalues: {set_b_eigenvalues}\n")
     print(f"Set B Eigenvectors:\n{set_b_eigenvectors}\n")

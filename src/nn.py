@@ -1,7 +1,7 @@
 """
 CS6140 Project 2
-Yihan Xu
 Jake Van Meter
+Yihan Xu
 """
 
 from __future__ import annotations
@@ -164,16 +164,8 @@ def k_nearest_neighbors(training_set: pd.DataFrame, test_set: pd.DataFrame, k: i
         # Get k nearest neighbors
         nearest_neighbors = distances_to_points.argsort()[:k]
         classes = [training_set["Price"].iloc[index] for index in nearest_neighbors]
-        # print(f"classes: {classes}")
         predicted_classes.append(Counter(classes).most_common(1)[0][0])
         closest_dist = distances_to_points.min()
-        # nn_idx = distances_to_points[distances_to_points == closest_dist].index[0]
-        # nn = training_set.iloc[nn_idx]
-        # # Get nearest neighbor's class
-        # nn_class = nn["Price"]
-        # # Add predicted value to prediction array
-        # predicted_classes.append(nn_class)
-        # Add distance to error terms array
         error_terms.append(closest_dist)
 
     return (predicted_classes, error_terms)

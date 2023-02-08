@@ -1,7 +1,7 @@
 """
 CS6140 Project 2
-Yihan Xu
 Jake Van Meter
+Yihan Xu
 """
 
 import numpy as np
