@@ -69,8 +69,10 @@ def dist_between_data_sets(from_points: pd.DataFrame | pd.Series, to_points: pd.
         ret = np.sqrt(ret)
         ret = pd.Series(ret)
     else:
-        # Transform the from_points and to_points into a 1xNx4 matrix and Ex1x4 matrix respectively 
-        transformed_from_points = from_points.values[np.newaxis, :, :]
+        # Transform the from_points and to_points into a 1xNxF matrix and Ex1xF matrix respectively
+        # (where F is number of features) so that numpy's broadcasting will transform their summ
+        # squared differened along the F features into a ExN matrix
+        transformed_from_points = from_points.values[np.newaxis, :, :] # np.newaxis adds dimension
         transformed_to_points = to_points.values[:, np.newaxis, :]
         # Get the square root of the sum of squares divided by std (1 if not normalized) of the distance between the points
         ret = (transformed_from_points - transformed_to_points)**2/std
@@ -101,7 +103,7 @@ def k_nearest_neighbors(training_set: pd.DataFrame, test_set: pd.DataFrame, k: i
         # Get k nearest neighbors
         nearest_neighbors = distances_to_points.argsort()[:k]
         classes = [training_set["Price"].iloc[index] for index in nearest_neighbors]
-        print(f"classes: {classes}")
+        # print(f"classes: {classes}")
         predicted_classes.append(Counter(classes).most_common(1)[0][0])
         closest_dist = distances_to_points.min()
         # nn_idx = distances_to_points[distances_to_points == closest_dist].index[0]
