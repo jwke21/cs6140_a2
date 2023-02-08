@@ -155,24 +155,47 @@ def main():
     eig_1_Y = set_a_means[1] # Y value of arrow start
     eig_1_U = set_a_eigenvectors[0][0] # X magnitude of arrow
     eig_1_V = set_a_eigenvectors[1][0] # Y magnitude of arrow
-    plt.scatter(x=df_1.iloc[:, 0], y=df_1.iloc[:, 1], c="b", label="Data set A points")
+    plt.scatter(x=df_1.iloc[:, 0], y=df_1.iloc[:, 1], label="Data set A points")
+    plt.quiver(eig_1_X, eig_1_Y, eig_1_U, eig_1_V, angles="xy", scale_units="xy", scale=1, label="Data set A first eigenvector")
+    plt.xlabel("X1")
+    plt.ylabel("X2")
+    plt.legend()
+    plt.draw()
+    plt.show()
+
+    plt.scatter(x=df_1.iloc[:, 0], y=df_1.iloc[:, 1], label="Data set A points")
     plt.scatter(x=set_a_proj_data.iloc[:, 0], y=set_a_proj_data.iloc[:, 1], c="r", label="Data set A projected data")
     plt.quiver(eig_1_X, eig_1_Y, eig_1_U, eig_1_V, angles="xy", scale_units="xy", scale=1, label="Data set A first eigenvector")
     plt.legend()
     plt.draw()
     plt.show()
 
+    print(f"Set A Eigenvalues: {set_a_eigenvalues}\n")
+    print(f"Set A Eigenvectors:\n{set_a_eigenvectors}\n")
+
     # Plot set B with its eigenvectors
     eig_2_X = set_b_means[0] # X value of arrow start
     eig_2_Y = set_b_means[1] # Y value of arrow start
     eig_2_U = set_b_eigenvectors[0][0] # X magnitude of arrow
     eig_2_V = set_b_eigenvectors[1][0] # Y magnitude of arrow
-    plt.scatter(x=df_2.iloc[:, 0], y=df_2.iloc[:, 1], c="b", label="Data set B points")
+    plt.scatter(x=df_2.iloc[:, 0], y=df_2.iloc[:, 1], label="Data set B points")
+    plt.quiver(eig_2_X, eig_2_Y, eig_2_U, eig_2_V, angles="xy", scale_units="xy", scale=1, label="Data set B first eigenvector")
+    plt.xlabel("X1")
+    plt.ylabel("X2")
+    plt.legend()
+    plt.draw()
+    plt.show()
+
+    plt.scatter(x=df_2.iloc[:, 0], y=df_2.iloc[:, 1], label="Data set B points")
     plt.scatter(x=set_b_proj_data.iloc[:, 0], y=set_b_proj_data.iloc[:, 1], c="r", label="Data set B projected data")
     plt.quiver(eig_2_X, eig_2_Y, eig_2_U, eig_2_V, angles="xy", scale_units="xy", scale=1, label="Data set B first eigenvector")
     plt.legend()
     plt.draw()
     plt.show()
+    
+
+    print(f"Set B Eigenvalues: {set_b_eigenvalues}\n")
+    print(f"Set B Eigenvectors:\n{set_b_eigenvectors}\n")
 
     # Apply k-means to projected data
     k_means(set_a_proj_data, 6)
@@ -182,7 +205,12 @@ def main():
     mean_shift(set_a_proj_data)
     mean_shift(set_b_proj_data)
 
-    # Weight the eigenvectors differently
+    # Apply k-means to projected data with eigenvectors weighted by eigenvalues
+    weighted_set_a = set_a_proj_data.mul(set_a_eigenvalues, axis=1)
+    weighted_set_b = set_b_proj_data.mul(set_b_eigenvalues, axis=1)
+    k_means(weighted_set_a, 6)
+    k_means(weighted_set_b, 6)
+
 
 if __name__ == "__main__":
     main()
