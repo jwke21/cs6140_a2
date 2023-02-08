@@ -84,7 +84,7 @@ what's left
 - try different K - yihan
 - try PCA on the data/change the dataset -yihan
 - modify price range to get better precision - jake, yihan
-- modify distance metrics function to a better runtime -jake
+- modify distance metrics function to a better runtime and make sure it is correct -jake, yihan
 - 2.E experience different eigenvector weights -jake
 - try different classfiers on task for4
 - adding comments
