@@ -47,19 +47,18 @@ def build_column_from_series(series: pd.Series) -> Column:
 
 
 def non_normalized_dist(first: pd.Series, second: pd.Series) -> float:
-    dist = 0
-    # Convert the series' to lists for easy iteration
-    for i, first_val in enumerate(first):
-        dist += (first_val - second.iloc[i]) ** 2
-    return math.sqrt(dist)
+    dist = np.square(first.values - second.values)
+    dist = np.sum(dist)
+    dist = np.sqrt(dist)
+    return dist
 
 
 def normalized_dist(first: pd.Series, second: pd.Series, std: List[float]) -> float:
-    dist = 0
-    for i, first_val in enumerate(first):
-        dist += (first_val - second.iloc[i]) ** 2
-        dist /= std[i]  # Divide by the std for that col to whiten
-    return math.sqrt(dist)
+    dist = np.square(first.values - second.values)
+    dist = np.divide(dist, std)
+    dist = np.sum(dist)
+    dist = np.sqrt(dist)
+    return dist
 
 
 def dist_between_data_sets(from_points: pd.DataFrame, to_points: pd.DataFrame, std: List[float] | None) -> pd.DataFrame:
@@ -170,8 +169,6 @@ def main():
     std = [col.std for col in columns]
     predictions, error_terms = nearest_neighbor(training_df, test_df, std)
 
-    print(test_df["Price"])
-    print(predictions)
     # Calculate precision
     precision = calculate_precision(test_df["Price"], predictions)
     print(f"precision using whitened data is: {precision}")
@@ -182,8 +179,6 @@ def main():
     # Run Nearest Neighbor without whitened data
     predictions, error_terms = nearest_neighbor(training_df, test_df)
 
-    print(test_df["Price"])
-    print(predictions)
     # Calculate precision$
     precision = calculate_precision(test_df["Price"], predictions)
     print(f"precision using un_whitened data is: {precision}")
