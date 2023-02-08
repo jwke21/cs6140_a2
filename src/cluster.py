@@ -45,6 +45,7 @@ def calculate_minimum_description_length(k: int, n: int, representation_error: f
     return minimum_description_length
 
 
+# Function to prepare for the diff calculation in Krzanowski and Lai
 def prepare_for_diff(k: int, p: int, data: pd.DataFrame) -> float:
     kmeans = KMeans(n_clusters=k, n_init="auto")
     kmeans.fit_predict(data)
@@ -52,11 +53,13 @@ def prepare_for_diff(k: int, p: int, data: pd.DataFrame) -> float:
     return (k ** (2 / p)) * representation_error
 
 
+# Function to calculate the diff calculation in Krzanowski and Lai
 def calculate_diff(k: int, p: int, data: pd.DataFrame) -> float:
     diff = prepare_for_diff(k - 1, p, data) - prepare_for_diff(k, p, data)
     return diff
 
 
+# Function to calculate Krzanowski and Lai
 def calculate_KL(k: int, data: pd.DataFrame) -> float:
     p = len(data.axes[1])
     diff_k = calculate_diff(k, p, data)

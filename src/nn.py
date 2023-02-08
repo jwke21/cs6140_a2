@@ -84,7 +84,7 @@ def dist_between_data_points(from_point: pd.Series, to_points: pd.DataFrame, std
     return pd.Series(ret)
 
 
-def nearest_neighbor(training_set: pd.DataFrame, test_set: pd.DataFrame, std: List[float] | None = None) -> Tuple[List[str], List[float]]:
+def k_nearest_neighbors(training_set: pd.DataFrame, test_set: pd.DataFrame, k: int, std: List[float] | None = None) -> Tuple[List[str], List[float]]:
     # Returned arrays
     predicted_classes = []
     error_terms = []
@@ -101,14 +101,18 @@ def nearest_neighbor(training_set: pd.DataFrame, test_set: pd.DataFrame, std: Li
     for i in range(test_set.shape[0]):
         # Get distances
         distances_to_points = dist_matrix[i]
-        # Get nearest neighbor
+        # Get k nearest neighbors
+        nearest_neighbors = distances_to_points.argsort()[:k]
+        classes = [training_set["Price"].iloc[index] for index in nearest_neighbors]
+        print(f"classes: {classes}")
+        predicted_classes.append(Counter(classes).most_common(1)[0][0])
         closest_dist = distances_to_points.min()
-        nn_idx = distances_to_points[distances_to_points == closest_dist].index[0]
-        nn = training_set.iloc[nn_idx]
-        # Get nearest neighbor's class
-        nn_class = nn["Price"]
-        # Add predicted value to prediction array
-        predicted_classes.append(nn_class)
+        # nn_idx = distances_to_points[distances_to_points == closest_dist].index[0]
+        # nn = training_set.iloc[nn_idx]
+        # # Get nearest neighbor's class
+        # nn_class = nn["Price"]
+        # # Add predicted value to prediction array
+        # predicted_classes.append(nn_class)
         # Add distance to error terms array
         error_terms.append(closest_dist)
 
@@ -167,8 +171,7 @@ def main():
 
     # Run Nearest Neighbor with whitened data
     std = [col.std for col in columns]
-    predictions, error_terms = nearest_neighbor(training_df, test_df, std)
-
+    predictions, error_terms = k_nearest_neighbors(training_df, test_df, 1, std)
     # Calculate precision
     precision = calculate_precision(test_df["Price"], predictions)
     print(f"precision using whitened data is: {precision}")
@@ -177,11 +180,29 @@ def main():
     plot_conf_matrix(conf_matrix)
 
     # Run Nearest Neighbor without whitened data
-    predictions, error_terms = nearest_neighbor(training_df, test_df)
-
-    # Calculate precision$
+    predictions, error_terms = k_nearest_neighbors(training_df, test_df, 1)
+    # Calculate precision
     precision = calculate_precision(test_df["Price"], predictions)
     print(f"precision using un_whitened data is: {precision}")
+    # Calculate and plot confusion matrix
+    conf_matrix = compute_confusion_matrix(test_df["Price"], predictions)
+    plot_conf_matrix(conf_matrix)
+
+    # Try different number of neighbors
+    predictions, error_terms = k_nearest_neighbors(training_df, test_df, 10)
+    # Calculate precision
+    precision = calculate_precision(test_df["Price"], predictions)
+    print(f"precision using un_whitened data with 10 nearest neighbors is: {precision}")
+    # Calculate and plot confusion matrix
+    conf_matrix = compute_confusion_matrix(test_df["Price"], predictions)
+    plot_conf_matrix(conf_matrix)
+
+    # Try different number of neighbors
+    std = [col.std for col in columns]
+    predictions, error_terms = k_nearest_neighbors(training_df, test_df, 10, std)
+    # Calculate precision
+    precision = calculate_precision(test_df["Price"], predictions)
+    print(f"precision using whitened data with 10 nearest neighbors is: {precision}")
     # Calculate and plot confusion matrix
     conf_matrix = compute_confusion_matrix(test_df["Price"], predictions)
     plot_conf_matrix(conf_matrix)
