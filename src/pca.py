@@ -56,7 +56,7 @@ def reduce_dimensions(proj_data: pd.DataFrame, eigenvalues: np.ndarray, explaine
     # Perform the dimensionality reduction
     X_reduced = proj_data.iloc[:, :num_kept]
     print(f"Number of eigenvectors kept: {num_kept} out of {N}")
-    print(f"Explained variance: {explained_variance / N}")
+    print(f"Explained variance: {variance / N}")
 
     return X_reduced
 
