@@ -27,10 +27,13 @@ The following dependencies were used and can be installed with `pip install <dep
 5) Seaborn
 
 ## Overall structure of the project:
-there are 6 files under the src folder:
+There are 6 files under the src folder:
 - cluster.py: mainly covers task 2 and 3, all the execution logic is in the main() function.
 - nn.py: mainly covers task 1, all the execution logic is in the main() function.
 - (please add instructions on the other files)
+
+All the datasets are under the datasets folder.
+All the images are under the images folder.
 
 ## Instructions for Testing Extensions
 
