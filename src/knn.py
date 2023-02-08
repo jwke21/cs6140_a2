@@ -35,7 +35,7 @@ def find_optimal_num_neighbors(X_train: pd.DataFrame, X_test: pd.DataFrame, y_tr
     # Classify data set using KNN (Features are already whitened)
     max_score = 0.0
     best_n_neighbors = 0
-    for i in range(range_end, range_end):
+    for i in range(range_start, range_end):
         knn = KNeighborsClassifier(n_neighbors=i)
         knn.fit(X_train, y_train)
         score = knn.score(X_test, y_test)
