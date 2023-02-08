@@ -46,42 +46,33 @@ def build_column_from_series(series: pd.Series) -> Column:
     )
 
 
-def non_normalized_dist(first: pd.Series, second: pd.Series) -> float:
-    dist = np.square(first.values - second.values)
-    dist = np.sum(dist)
-    dist = np.sqrt(dist)
-    return dist
+def dist_between_data_sets(from_points: pd.DataFrame | pd.Series, to_points: pd.DataFrame, std: List[float] | None) -> pd.DataFrame | pd.Series:
+    # ret will be ExN distance matrix using a standardized Euclidian distance metric
+    ret = None
 
+    if not std:
+        std = [1 for _ in range(len(from_points.columns))]
 
-def normalized_dist(first: pd.Series, second: pd.Series, std: List[float]) -> float:
-    dist = np.square(first.values - second.values)
-    dist = np.divide(dist, std)
-    dist = np.sum(dist)
-    dist = np.sqrt(dist)
-    return dist
+    # Handle case where N=1
+    if from_points.shape[0] == 1:
+        # Transform the from_points into a single column
+        transformed_from_points = np.array(from_points).reshape(1, -1)
+        # Get the square root of the sum of squares divided by std (1 if not normalized)
+        ret = (transformed_from_points - to_points.values)**2/std
+        ret = np.sum(ret, axis=-1)
+        ret = np.sqrt(ret)
+        ret = pd.Series(ret)
+    else:
+        # Transform the from_points and to_points into a 1xNx4 matrix and Ex1x4 matrix respectively 
+        transformed_from_points = from_points.values[np.newaxis, :, :]
+        transformed_to_points = to_points.values[:, np.newaxis, :]
+        # Get the square root of the sum of squares divided by std (1 if not normalized) of the distance between the points
+        ret = (transformed_from_points - transformed_to_points)**2/std
+        ret = np.sum(ret, axis=-1)
+        ret = np.sqrt(ret)
+        ret = pd.DataFrame(ret)
 
-
-def dist_between_data_sets(from_points: pd.DataFrame, to_points: pd.DataFrame, std: List[float] | None) -> pd.DataFrame:
-    # ExN distance matrix
-    ret = pd.DataFrame()
-    cols = []
-    for i, from_data_point in from_points.iterrows():
-        cols.append(dist_between_data_points(from_data_point, to_points, std))
-    return pd.concat(cols, axis=1)
-
-
-def dist_between_data_points(from_point: pd.Series, to_points: pd.DataFrame, std: List[float] | None) -> pd.Series:
-    # Ex1 distance matrix
-    ret = []
-    # Get the distance from the data point to each exemplar data point
-    for i, to_data_point in to_points.iterrows():
-        dist = None
-        if not std:
-            dist = non_normalized_dist(from_point, to_data_point)
-        else:
-            dist = normalized_dist(from_point, to_data_point, std)
-        ret.append(dist)
-    return pd.Series(ret)
+    return ret
 
 
 def nearest_neighbor(training_set: pd.DataFrame, test_set: pd.DataFrame, std: List[float] | None = None) -> Tuple[List[str], List[float]]:
@@ -103,7 +94,7 @@ def nearest_neighbor(training_set: pd.DataFrame, test_set: pd.DataFrame, std: Li
         distances_to_points = dist_matrix[i]
         # Get nearest neighbor
         closest_dist = distances_to_points.min()
-        nn_idx = distances_to_points[distances_to_points == closest_dist].index[0]
+        nn_idx = np.where(distances_to_points == closest_dist)[0][0]
         nn = training_set.iloc[nn_idx]
         # Get nearest neighbor's class
         nn_class = nn["Price"]
@@ -137,7 +128,7 @@ def plot_conf_matrix(conf_matrix: Any) -> None:
 
 
 def main():
-    df = pd.read_csv("../datasets/USA_Housing3.csv")
+    df = pd.read_csv("datasets/USA_Housing3.csv")
     columns = []
 
     for i in range(len(df.columns.values)):
