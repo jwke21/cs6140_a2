@@ -1,5 +1,10 @@
 # cs6140_a2
 
+## Links
+
+- Heavily consulted <a href="https://numpy.org/doc/stable/user/basics.broadcasting.html">Numpy's broadcasting documentation</a> to
+figure out how to caluclate the distance between samples in two data sets efficiently. 
+
 ## Reference
 
 Distance metric:
@@ -84,6 +89,6 @@ what's left
 - try different K - yihan(done)
 - modify price range to get better precision - jake, yihan (done)
 - modify distance metrics function to a better runtime and make sure it is correct -jake, yihan (done)
-- 2.E experience different eigenvector weights -jake
-- try different classfiers on task for4
+- 2.E experience different eigenvector weights -jake (done)
+- try different classfiers on task for4 (done)
 - adding comments
