@@ -67,8 +67,9 @@ Yihan:
 - [ ] 1.C, 1.D
 - [ ] 2.A-C
 - [ ] 3
-- [ ] Try out more clustering methods.
-- [ ] Implement additional cluster quality metrics.
+- [ ] Try out more clustering methods. done
+- [ ] Implement additional cluster quality metrics. done
+- [ ] Implement confusion matrix
 
 Files:
 1) KNN
@@ -76,3 +77,14 @@ Files:
 3) PCA
 4) Main
 
+
+what's left
+- report -jake,yihan
+- readMe - jake,yihan
+- try different K - yihan
+- try PCA on the data/change the dataset -yihan
+- modify price range to get better precision - jake, yihan
+- modify distance metrics function to a better runtime -jake
+- 2.E experience different eigenvector weights -jake
+- try different classfiers on task for4
+- adding comments
