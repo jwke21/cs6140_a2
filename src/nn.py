@@ -59,9 +59,9 @@ def dist_between_data_sets(from_points: pd.DataFrame | pd.Series, to_points: pd.
     if not std:
         std = [1 for _ in range(len(from_points.columns))]
 
-    # Handle case where N=1
-    if from_points.shape[0] == 1:
-        # Transform the from_points into a single column
+    # Handle case where N=1: from_points will be a Series
+    if len(from_points.shape) == 1:
+        # Transform the from_points into a single row
         transformed_from_points = np.array(from_points).reshape(1, -1)
         # Get the square root of the sum of squares divided by std (1 if not normalized)
         ret = (transformed_from_points - to_points.values)**2/std
