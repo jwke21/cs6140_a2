@@ -2,8 +2,31 @@
 
 ## Links
 
-- Heavily consulted <a href="https://numpy.org/doc/stable/user/basics.broadcasting.html">Numpy's broadcasting documentation</a> to
-figure out how to caluclate the distance between samples in two data sets efficiently. 
+- <a href="https://www.kaggle.com/datasets/vedavyasv/usa-housing">USA_Housing</a> - Kaggle csv used for this project.
+- Consulted <a href="https://numpy.org/doc/stable/user/basics.broadcasting.html">Numpy's broadcasting documentation</a> and
+this <a href="https://stackoverflow.com/questions/29241056/how-do-i-use-np-newaxis">stack overflow post on</a> `numpy.newaxis`
+to figure out how to caluclate the distance between samples in two data sets efficiently.
+
+## Operating System and IDE
+
+<b>Yihan</b>
+- <b>OS:</b> MacOS
+- <b>IDE:</b> PyCharm
+
+<b>Jake</b>
+- <b>OS:</b> Windows 10
+- <b>IDE:</b> VSCode
+
+## Instructions for Running
+
+The following dependencies were used and can be installed with `pip install <dependency>`:
+1) NumPy
+2) Pandas
+3) Sklearn (installed with `pip install scikit-learn`)
+4) Matplotlib
+5) Seaborn
+
+## Instructions for Testing Extensions
 
 ## Reference
 
