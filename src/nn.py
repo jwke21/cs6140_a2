@@ -53,6 +53,36 @@ def build_column_from_series(series: pd.Series) -> Column:
 
 
 def dist_between_data_sets(from_points: pd.DataFrame | pd.Series, to_points: pd.DataFrame, std: List[float] | None) -> pd.DataFrame | pd.Series:
+    """ Euclidian Distance Between Data sets calculation.
+
+    Calculates the Eculidian distance from the point(s) in one set to the points in the other
+    set. Distance is non-normalized by default but can be normalized if an ordered list
+    of standard deviations for each feature is given. Given an NxF data set and an
+    ExF data set, will return a ExN data set whose rows are the euclidian distance from
+    each of the N samples of the first matrix (now columns) to to each of the E samples
+    of second matrix (now rows).
+
+    Parameters
+    ----------
+    from_points : pandas.Dataframe or pandas.Series
+        The NxF matrix whose N row(s) will be the columns of the new matrix.
+
+    to_points : pandas.Dataframe
+        The ExF matrix whose E rows will be the rows of the new matrix.
+
+    std : List[float] or None, default=None
+        The list of standard deviations for each of the F features in the overall data set.
+        Used for getting normalized distances between data points. If None, non-
+        normalized Euclidian distance will be used. Otherwise, the values of the
+        list will be used to get the normalized Euclidian distance.
+
+    Returns
+    -------
+    ret : pandas.DataFrame or pandas.Series
+        The ExN matrix whose rows are the Euclidian distance from each of the N from_points
+        samples to each of the E to_points samples. 
+
+    """
     # ret will be ExN distance matrix using a standardized Euclidian distance metric
     ret = None
 
@@ -83,7 +113,38 @@ def dist_between_data_sets(from_points: pd.DataFrame | pd.Series, to_points: pd.
     return ret
 
 
-def k_nearest_neighbors(training_set: pd.DataFrame, test_set: pd.DataFrame, k: int, std: List[float] | None = None) -> Tuple[List[str], List[float]]:
+def k_nearest_neighbors(training_set: pd.DataFrame, test_set: pd.DataFrame, k: int, std: List[float] | None = None) -> Tuple[List[int], List[float]]:
+    """ K-Nearest Neighbor (KNN) implementation.
+
+    Utilizes a Euclidian Distance metric to classify test data points based on the labels
+    of the labels of their k closest neigbors. Distance metric is non-normalized by default
+    but can be normalized if an ordered list of standard deviations for each feature is given.
+
+    Parameters
+    ----------
+    training_set : pandas.DataFrame
+        The training data that will be used to train the model.
+
+    test_set : pandas.DataFrame
+        The test set whose dependent values will be predcited from.
+
+    k : int
+        The number of neighbors that will be used to classify the test data points.
+
+    std : List[float] or None, default=None
+        The list of standard deviations for each feature in the overall data set.
+        Used for getting normalized distances between data points. If None, the
+        difference metric will not be normalized. None by default.
+
+    Returns
+    -------
+    predicted_classes : List[int]
+        The predicted classes for the data points in the test_set.
+
+    error_terms : List[float]
+        The error terms for the data points of the test set. A data point's
+        error_term is the distance between it and its closest neighbor.
+    """
     # Returned arrays
     predicted_classes = []
     error_terms = []
