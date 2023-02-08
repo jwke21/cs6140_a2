@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans, MeanShift, AgglomerativeClustering
 from scipy.cluster.hierarchy import dendrogram, linkage
 import math
+from pca import pca
 
 
 # Function to plot the clusters
@@ -119,8 +120,8 @@ def k_means_with_range_and_plot(min: int, max: int, data: pd.DataFrame, if_plot:
 
 def main():
     # Get the datasets
-    df_1 = pd.read_csv("../datasets/clusterDataA-1.csv")
-    df_2 = pd.read_csv("../datasets/clusterDataB-1.csv")
+    df_1 = pd.read_csv("datasets/clusterDataA-1.csv")
+    df_2 = pd.read_csv("datasets/clusterDataB-1.csv")
     # Plot the datasets
     plot_cluster(df_1)
     plot_cluster(df_2)
@@ -141,10 +142,47 @@ def main():
     k_means_with_range_and_plot(2, 11, df_1)
 
     # Apply K-Means Clustering to wine dataset
-    wine_data = pd.read_csv("../datasets/wine-clustering.csv")
+    wine_data = pd.read_csv("datasets/wine-clustering.csv")
     # Try k from 2 to 30 on dataset A
     k_means_with_range_and_plot(2, 30, wine_data, False)
 
+    # Apply PCA to data sets
+    set_a_means, set_a_std, set_a_eigenvalues, set_a_eigenvectors, set_a_proj_data = pca(df_1.iloc[:, :-1], normalize=False, print_results=False)
+    set_b_means, set_b_std, set_b_eigenvalues, set_b_eigenvectors, set_b_proj_data = pca(df_2.iloc[:, :-1], normalize=False, print_results=False)
+
+    # Plot set A with its eigenvectors
+    eig_1_X = set_a_means[0] # X value of arrow start
+    eig_1_Y = set_a_means[1] # Y value of arrow start
+    eig_1_U = set_a_eigenvectors[0][0] # X magnitude of arrow
+    eig_1_V = set_a_eigenvectors[1][0] # Y magnitude of arrow
+    plt.scatter(x=df_1.iloc[:, 0], y=df_1.iloc[:, 1], c="b", label="Data set A points")
+    plt.scatter(x=set_a_proj_data.iloc[:, 0], y=set_a_proj_data.iloc[:, 1], c="r", label="Data set A projected data")
+    plt.quiver(eig_1_X, eig_1_Y, eig_1_U, eig_1_V, angles="xy", scale_units="xy", scale=1, label="Data set A first eigenvector")
+    plt.legend()
+    plt.draw()
+    plt.show()
+
+    # Plot set B with its eigenvectors
+    eig_2_X = set_b_means[0] # X value of arrow start
+    eig_2_Y = set_b_means[1] # Y value of arrow start
+    eig_2_U = set_b_eigenvectors[0][0] # X magnitude of arrow
+    eig_2_V = set_b_eigenvectors[1][0] # Y magnitude of arrow
+    plt.scatter(x=df_2.iloc[:, 0], y=df_2.iloc[:, 1], c="b", label="Data set B points")
+    plt.scatter(x=set_b_proj_data.iloc[:, 0], y=set_b_proj_data.iloc[:, 1], c="r", label="Data set B projected data")
+    plt.quiver(eig_2_X, eig_2_Y, eig_2_U, eig_2_V, angles="xy", scale_units="xy", scale=1, label="Data set B first eigenvector")
+    plt.legend()
+    plt.draw()
+    plt.show()
+
+    # Apply k-means to projected data
+    k_means(set_a_proj_data, 6)
+    k_means(set_b_proj_data, 6)
+
+    # Apply mean shift to projected data
+    mean_shift(set_a_proj_data)
+    mean_shift(set_b_proj_data)
+
+    # Weight the eigenvectors differently
 
 if __name__ == "__main__":
     main()
