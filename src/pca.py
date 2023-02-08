@@ -1,3 +1,9 @@
+"""
+CS6140 Project 2
+Yihan Xu
+Jake Van Meter
+"""
+
 import pandas as pd
 import numpy as np
 

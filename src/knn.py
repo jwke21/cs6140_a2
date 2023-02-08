@@ -1,7 +1,14 @@
+"""
+CS6140 Project 2
+Yihan Xu
+Jake Van Meter
+"""
+
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import confusion_matrix
 from pca import pca, reduce_dimensions
 from typing import *
 
@@ -45,8 +52,16 @@ def find_optimal_num_neighbors(X_train: pd.DataFrame, X_test: pd.DataFrame, y_tr
         if score > max_score:
             max_score = score
             best_n_neighbors = i
-    print(f"{best_n_neighbors} neighbors produced the highest score of {max_score}")
-    return best_n_neighbors, max_score, KNeighborsClassifier(n_neighbors=best_n_neighbors)
+    print(f"{best_n_neighbors} neighbors produced the highest accuracy of {max_score}")
+    ret_model = KNeighborsClassifier(n_neighbors=best_n_neighbors)
+    ret_model.fit(X_train, y_train)
+    return best_n_neighbors, max_score, ret_model
+
+def print_knn_results(knn: KNeighborsClassifier, X_test: pd.DataFrame, y_test: pd.Series) -> None:
+    predictions = knn.predict(X_test)
+    print(f"Confusion Matrix where k={knn.n_neighbors}:\n{confusion_matrix(y_test, predictions)}")
+    print("")
+    
 
 def main():
     X_raw, y_raw = load_uci_data()

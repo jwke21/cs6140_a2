@@ -1,3 +1,9 @@
+"""
+CS6140 Project 2
+Yihan Xu
+Jake Van Meter
+"""
+
 from pca import *
 from knn import *
 

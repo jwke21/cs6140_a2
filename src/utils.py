@@ -1,3 +1,9 @@
+"""
+CS6140 Project 2
+Yihan Xu
+Jake Van Meter
+"""
+
 import numpy as np
 import pandas as pd
 import random
