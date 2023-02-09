@@ -94,9 +94,4 @@ Column 4: "Price"
 
 <b>Price Histogram:</b>
 
-![alt text](./resources/price_hist.png)
-
-## Logistics
-
-Dependency installation (if virtual environment is used):
-- `pip install numpy scipy matplotlib scikit-learn pandas`
+![alt text](./images/price_hist.png)
