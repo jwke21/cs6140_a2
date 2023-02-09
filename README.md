@@ -52,6 +52,7 @@ There are 6 files:
 - knn.py: covers task 4, all the execution logic is in the `fourth_task()` function.
 
 All the datasets are under the datasets folder.
+
 All the images are under the images folder.
 
 ## Instructions for Testing Extensions
