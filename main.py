@@ -11,6 +11,9 @@ from knn import fourth_task
 
 def main():
     argv = sys.argv
+    # If desired task is not specified, run all tasks
+    if len(argv) == 1:
+        argv.append("all")
     #################### PART 1 ####################
     if "all" in argv or "1" in argv:
         first_task()

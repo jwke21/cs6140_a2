@@ -227,6 +227,9 @@ def third_task():
     k_means_with_range_and_plot(2, 30, wine_data, False)
 
 
-if __name__ == "__main__":
+def main():
     second_task()
     third_task()
+
+if __name__ == "__main__":
+    main()
