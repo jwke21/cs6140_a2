@@ -11,6 +11,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import confusion_matrix
 from pca import pca, reduce_dimensions
 from typing import *
+from nn import plot_conf_matrix
 
 ACTIVITY_LABELS = [
     1, # WALKING
@@ -38,7 +39,7 @@ def load_uci_data() -> Tuple[pd.DataFrame, pd.Series]:
 
 # Finds the number of neighbors that produces the best score for the given training and test sets
 def find_optimal_num_neighbors(X_train: pd.DataFrame, X_test: pd.DataFrame, y_train: pd.Series, y_test: pd.Series, \
-                                range_start=2, range_end=11, print_all_scores=False) -> Tuple[int, float, KNeighborsClassifier]:
+                                range_start=2, range_end=11, print_all_scores=False) -> Tuple[int, float]:
     # Classify data set using KNN (Features are already whitened)
     max_score = 0.0
     best_n_neighbors = 0
@@ -52,16 +53,20 @@ def find_optimal_num_neighbors(X_train: pd.DataFrame, X_test: pd.DataFrame, y_tr
         if score > max_score:
             max_score = score
             best_n_neighbors = i
-    print(f"{best_n_neighbors} neighbors produced the highest accuracy of {max_score}")
-    ret_model = KNeighborsClassifier(n_neighbors=best_n_neighbors)
+    return best_n_neighbors, max_score
+
+def build_and_fit_knn_classifier(num_neighbors: int, X_train: pd.DataFrame, y_train: pd.Series) -> KNeighborsClassifier:
+    ret_model = KNeighborsClassifier(n_neighbors=num_neighbors)
     ret_model.fit(X_train, y_train)
-    return best_n_neighbors, max_score, ret_model
+    return ret_model
 
 def print_knn_results(knn: KNeighborsClassifier, X_test: pd.DataFrame, y_test: pd.Series) -> None:
     predictions = knn.predict(X_test)
-    print(f"Confusion Matrix where k={knn.n_neighbors}:\n{confusion_matrix(y_test, predictions)}")
+    conf_matrix = confusion_matrix(y_test, predictions)
+    print(f"Accuracy for k={knn.n_neighbors}: {knn.score(X_test, y_test)}")
+    print(f"Confusion Matrix where k={knn.n_neighbors}:\n{conf_matrix}")
+    plot_conf_matrix(conf_matrix)
     print("")
-    
 
 def main():
     X_raw, y_raw = load_uci_data()

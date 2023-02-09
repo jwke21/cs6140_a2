@@ -102,6 +102,7 @@ def dist_between_data_sets(from_points: pd.DataFrame | pd.Series, to_points: pd.
         # (where F is number of features) so that numpy's broadcasting will transform their summ
         # squared differened along the F features into a ExN matrix
         # https://numpy.org/doc/stable/user/basics.broadcasting.html
+        # https://stackoverflow.com/questions/29241056/how-do-i-use-np-newaxis
         transformed_from_points = from_points.values[np.newaxis, :, :] # np.newaxis adds dimension
         transformed_to_points = to_points.values[:, np.newaxis, :]
         # Get the square root of the sum of squares divided by std (1 if not normalized) of the distance between the points
