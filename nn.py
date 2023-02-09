@@ -4,8 +4,6 @@ Jake Van Meter
 Yihan Xu
 """
 
-from __future__ import annotations
-
 import pandas as pd
 import numpy as np
 from typing import *
@@ -193,7 +191,7 @@ def plot_conf_matrix(conf_matrix: Any) -> None:
     plt.show()
 
 
-def main():
+def first_task():
     df = pd.read_csv("datasets/USA_Housing3.csv")
     columns = []
 
@@ -260,10 +258,6 @@ def main():
     conf_matrix = compute_confusion_matrix(test_df["Price"], predictions)
     plot_conf_matrix(conf_matrix)
 
-    # Histogram
-    # df["Price"].plot(kind="hist", xlabel="Price (Million)")
-    # plt.show()
-
 
 if __name__ == "__main__":
-    main()
+    first_task()

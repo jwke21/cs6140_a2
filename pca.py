@@ -22,7 +22,7 @@ def pca(data: pd.DataFrame, normalize=False, print_results=False) -> tuple[np.nd
         std_deviations = np.std(A, axis=0)
     else:
         # Assign all 1s to the standard deviation vector (1 for each column)
-        std_deviations = np.array([1 for i in range(0, A.shape[1])])
+        std_deviations = np.array([1 for _ in range(0, A.shape[1])])
     # Divide each column by its standard deviation vector
     #    (hint: this can be done as a single operation)
     D /= std_deviations
@@ -76,5 +76,5 @@ def print_pca_results(means: np.ndarray, std_deviations: np.ndarray,
     print(f"Eigenvalues:\n{eigenvalues}\n")
     print(f"Eigenvectors:\n{eigenvectors}\n")
     print(f"Projected data:\n{projected_data}\n")
-    print(f"Covariance matrix:\n{covariance_matrix}\n") # ???????????????????????????????????????????
+    print(f"Covariance matrix:\n{covariance_matrix}\n")
 

@@ -72,26 +72,52 @@ def print_knn_results(knn: KNeighborsClassifier, X_test: pd.DataFrame, y_test: p
     plot_conf_matrix(conf_matrix)
     print("")
 
-def main():
+def fourth_task():
     X_raw, y_raw = load_uci_data()
-
     # Split data into 75% training data and 25% test data
-    X_train, X_test, y_train, y_test = train_test_split(X_raw, y_raw, test_size=0.25)
+    X_train, X_test, y_train, y_test = train_test_split(X_raw, y_raw, test_size=0.25, random_state=11)
 
-    # Classify data set using KNN (Features are already whitened)
-    n_neigh, score, knn = find_optimal_num_neighbors(X_train, X_test, y_train, y_test)
+    print(f"\n-------------------- KNN ON RAW DATA --------------------\n")
+
+    # Find optimal number of neighbors for training set
+    n_neigh, score = find_optimal_num_neighbors(X_train, X_test, y_train, y_test, print_all_scores=True)
+    print(f"{n_neigh} neighbors produced the highest accuracy of {score}")
+    # Train the classifier
+    knn = build_and_fit_knn_classifier(n_neigh, X_train, y_train)
+    # Classify test set and print results
+    print_knn_results(knn, X_test, y_test)
+
+    print(f"\n-------------------- KNN ON REDUCED DATA SET --------------------\n")
 
     # Execute PCA on data
     _, _, eigenvalues, _, proj_data = pca(X_raw, normalize=True)
     # Keep enough eigenvectors to explain 90% of the data
     X_reduced = reduce_dimensions(proj_data, eigenvalues, explained_variance=0.9)
-
     # Split the reduced-dimension data into train-test sets
     X_train, X_test, y_train, y_test = train_test_split(X_reduced, y_raw, test_size=0.25)
+    # Train new classifier on reduced data set with same k
+    knn = build_and_fit_knn_classifier(n_neigh, X_train, y_train)
 
-    # Train the new classifier on the reduced-dimension data
-    n_neigh, score, knn = find_optimal_num_neighbors(X_train, X_test, y_train, y_test)
+    print_knn_results(knn, X_test, y_test)
+
+    print(f"\n-------------------- KNN ON REDUCED DATA SET --------------------\n")
+
+    # Keep enough eigenvectors to explain 80% of the data (Extension)
+    X_reduced = reduce_dimensions(proj_data, eigenvalues, explained_variance=0.8)
+    X_train, X_test, y_train, y_test = train_test_split(X_reduced, y_raw, test_size=0.25)
+    knn = build_and_fit_knn_classifier(n_neigh, X_train, y_train)
+
+    print_knn_results(knn, X_test, y_test)
+
+    print(f"\n-------------------- KNN ON REDUCED DATA SET --------------------\n")
+
+    # Keep enough eigenvectors to explain 70% of the data (Extension)
+    X_reduced = reduce_dimensions(proj_data, eigenvalues, explained_variance=0.7)
+    X_train, X_test, y_train, y_test = train_test_split(X_reduced, y_raw, test_size=0.25)
+    knn = build_and_fit_knn_classifier(n_neigh, X_train, y_train)
+
+    print_knn_results(knn, X_test, y_test)
 
 
 if __name__ == "__main__":
-    main()
+    fourth_task()

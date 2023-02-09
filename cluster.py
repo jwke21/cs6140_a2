@@ -9,8 +9,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans, MeanShift, AgglomerativeClustering
 from scipy.cluster.hierarchy import dendrogram, linkage
-import math
 from pca import pca
+import math
 
 
 # Function to plot the clusters
@@ -124,10 +124,10 @@ def k_means_with_range_and_plot(min: int, max: int, data: pd.DataFrame, if_plot:
     plt.show()
 
 
-def main():
+def second_task():
     # Get the datasets
-    df_1 = pd.read_csv("../datasets/clusterDataA-1.csv")
-    df_2 = pd.read_csv("../datasets/clusterDataB-1.csv")
+    df_1 = pd.read_csv("datasets/clusterDataA-1.csv")
+    df_2 = pd.read_csv("datasets/clusterDataB-1.csv")
     # Plot the datasets
     plot_cluster(df_1)
     plot_cluster(df_2)
@@ -146,11 +146,6 @@ def main():
 
     # Try k from 2 to 10 on dataset A
     k_means_with_range_and_plot(2, 11, df_1)
-
-    # Apply K-Means Clustering to wine dataset
-    wine_data = pd.read_csv("../datasets/wine-clustering.csv")
-    # Try k from 2 to 30 on dataset A
-    k_means_with_range_and_plot(2, 30, wine_data, False)
 
     # Apply PCA to data sets
     set_a_means, set_a_std, set_a_eigenvalues, set_a_eigenvectors, set_a_proj_data = pca(df_1.iloc[:, :-1],
@@ -225,5 +220,13 @@ def main():
     k_means(weighted_set_b, 6)
 
 
+def third_task():
+    # Apply K-Means Clustering to wine dataset
+    wine_data = pd.read_csv("datasets/wine-clustering.csv")
+    # Try k from 2 to 30 on dataset A
+    k_means_with_range_and_plot(2, 30, wine_data, False)
+
+
 if __name__ == "__main__":
-    main()
+    second_task()
+    third_task()
