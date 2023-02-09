@@ -19,6 +19,23 @@ to figure out how to caluclate the distance between samples in two data sets eff
 
 ## Instructions for Running
 
+Instructions for running from CLI: `python <path/to/assignment2>/main.py <desired_task>`
+- Where you replace `<desired_task>` with one or more of the following options:
+    - `all` to run all tasks.
+    - `1` to run task one code.
+    - `2` to run task two code.
+    - `3` to run task three code.
+    - `4` to run task four code.
+- If no value is provided for `<desired_task>` all tasks are run.
+
+Examples:
+- Running all tasks: `python main.py all`
+- Running just task 1: `python main.py 1`
+- Running just task 2: `python main.py 2`
+- Running just task 3: `python main.py 3`
+- Running just task 4: `python main.py 4`
+- Running a mixture of tasks 1 and 3: `python main.py 1 3`
+
 The following dependencies were used and can be installed with `pip install <dependency>`:
 1) NumPy
 2) Pandas
@@ -26,11 +43,13 @@ The following dependencies were used and can be installed with `pip install <dep
 4) Matplotlib
 5) Seaborn
 
+See `requirements.txt` for a list of all dependencies including those installed with the above packages.
+
 ## Overall structure of the project:
-There are 6 files under the src folder:
-- cluster.py: mainly covers task 2 and 3, all the execution logic is in the main() function.
-- nn.py: mainly covers task 1, all the execution logic is in the main() function.
-- (please add instructions on the other files)
+There are 6 files:
+- nn.py: covers task 1, all the execution logic is in the `first_task()` function.
+- cluster.py: covers tasks 2 and 3, all the execution logic is in the `main()` function.
+- knn.py: covers task 4, all the execution logic is in the `fourth_task()` function.
 
 All the datasets are under the datasets folder.
 All the images are under the images folder.
