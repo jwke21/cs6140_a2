@@ -26,7 +26,25 @@ The following dependencies were used and can be installed with `pip install <dep
 4) Matplotlib
 5) Seaborn
 
+## Overall structure of the project:
+There are 6 files under the src folder:
+- cluster.py: mainly covers task 2 and 3, all the execution logic is in the main() function.
+- nn.py: mainly covers task 1, all the execution logic is in the main() function.
+- (please add instructions on the other files)
+
+All the datasets are under the datasets folder.
+All the images are under the images folder.
+
 ## Instructions for Testing Extensions
+
+The extensions we have covered:
+- In task 1.C, created the confusion matrix to evaluate the KNN classifier.
+- In task 2.C, tried 2 additional clustering algorithms other than k-means: hierarchical clustering and mean-shift clustering.
+- In task 2.C, implemented 2 cluster quality metrics: Rissannon Minimum Description Length, Krzanowski and Lai.
+- In task 1.B, implemented the nearest neighbor function such that it returns the error terms for each point.
+- In task 2.E, applied k-means to projected data with weighted eigenvectors
+- In task 4, did more exploration by trying different number of dimensions: 28 and 11 which explained 80% and 70% of variance respectively
+
 
 ## Reference
 
@@ -82,36 +100,3 @@ Column 4: "Price"
 
 Dependency installation (if virtual environment is used):
 - `pip install numpy scipy matplotlib scikit-learn pandas`
-
-Jake:
-
-- [ ] Create initial distance metric (Thursday night)
-- [ ] Create confusion matrix (1.C)
-- [ ] 2.D and 2.E
-- [ ] 4
-- [ ] Do more exploration in the final task, such as trying different numbers of dimensions after PCA.
-
-Yihan:
-- [ ] 1.C, 1.D
-- [ ] 2.A-C
-- [ ] 3
-- [ ] Try out more clustering methods. done
-- [ ] Implement additional cluster quality metrics. done
-- [ ] Implement confusion matrix
-
-Files:
-1) KNN
-2) Clustering
-3) PCA
-4) Main
-
-
-what's left
-- report -jake,yihan
-- readMe - jake,yihan
-- try different K - yihan(done)
-- modify price range to get better precision - jake, yihan (done)
-- modify distance metrics function to a better runtime and make sure it is correct -jake, yihan (done)
-- 2.E experience different eigenvector weights -jake (done)
-- try different classfiers on task for4 (done)
-- adding comments

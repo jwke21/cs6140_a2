@@ -1,7 +1,7 @@
 """
 CS6140 Project 2
-Yihan Xu
 Jake Van Meter
+Yihan Xu
 """
 
 import pandas as pd
@@ -14,13 +14,14 @@ from typing import *
 from nn import plot_conf_matrix
 
 ACTIVITY_LABELS = [
-    1, # WALKING
-    2, # WALKING_UPSTAIRS
-    3, # WALKING_DOWNSTAIRS
-    4, # SITTING
-    5, # STANDING
-    6, # LAYING
+    1,  # WALKING
+    2,  # WALKING_UPSTAIRS
+    3,  # WALKING_DOWNSTAIRS
+    4,  # SITTING
+    5,  # STANDING
+    6,  # LAYING
 ]
+
 
 def load_uci_data() -> Tuple[pd.DataFrame, pd.Series]:
     # Load data from train and test sets
@@ -37,9 +38,11 @@ def load_uci_data() -> Tuple[pd.DataFrame, pd.Series]:
     y_raw = pd.Series(y_raw, name=y_name)
     return X_raw, y_raw
 
+
 # Finds the number of neighbors that produces the best score for the given training and test sets
 def find_optimal_num_neighbors(X_train: pd.DataFrame, X_test: pd.DataFrame, y_train: pd.Series, y_test: pd.Series, \
-                                range_start=2, range_end=11, print_all_scores=False) -> Tuple[int, float]:
+                               range_start=2, range_end=11, print_all_scores=False) -> Tuple[
+    int, float, KNeighborsClassifier]:
     # Classify data set using KNN (Features are already whitened)
     max_score = 0.0
     best_n_neighbors = 0
@@ -59,6 +62,7 @@ def build_and_fit_knn_classifier(num_neighbors: int, X_train: pd.DataFrame, y_tr
     ret_model = KNeighborsClassifier(n_neighbors=num_neighbors)
     ret_model.fit(X_train, y_train)
     return ret_model
+
 
 def print_knn_results(knn: KNeighborsClassifier, X_test: pd.DataFrame, y_test: pd.Series) -> None:
     predictions = knn.predict(X_test)
